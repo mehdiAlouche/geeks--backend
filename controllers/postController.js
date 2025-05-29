@@ -1,13 +1,27 @@
 const Post = require('../models/Post');
+const User = require('../models/User');
 
 // @desc    Create a post
 // @route   POST /api/posts
-// @access  Private
+// @access  Public
 exports.createPost = async (req, res) => {
   try {
+    // Find or create system user
+    let systemUser = await User.findOne({ email: 'system@geeks.com' });
+    
+    if (!systemUser) {
+      systemUser = await User.create({
+        username: 'System',
+        email: 'system@geeks.com',
+        password: 'system' + Date.now(), // Random password
+        role: 'admin'
+      });
+    }
+
+    // Create post with system user as author
     const post = await Post.create({
       ...req.body,
-      author: req.user._id
+      author: systemUser._id
     });
 
     res.status(201).json({
