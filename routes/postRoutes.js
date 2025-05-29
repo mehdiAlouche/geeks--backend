@@ -14,10 +14,10 @@ const { apiLimiter } = require('../middleware/rateLimiter');
 // Public routes
 router.get('/', apiLimiter, getPosts);
 router.get('/:id', apiLimiter, getPost);
+router.post('/', apiLimiter, createPost);
 
 // Protected routes
 router.use(protect);
-router.post('/', createPost);
 router.put('/:id', updatePost);
 router.delete('/:id', deletePost);
 
